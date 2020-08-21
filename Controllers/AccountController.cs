@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using MediControl.BindingModels;
 using MediControl.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
 namespace MediControl.Controllers
@@ -54,28 +60,67 @@ namespace MediControl.Controllers
         }
 
         [HttpPost("/api/login")]
-        public async Task<string> Login(UserLogin model)
+        public async Task<IActionResult> Login(UserLogin model)
         {
-            //User user;
-            //Microsoft.AspNetCore.Identity.SignInResult result;
+             User user = await userManager.FindByNameAsync(model.Username);
+            var signInResult = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
-            User signinuser = await userManager.FindByEmailAsync(model.Username);
-
-            Microsoft.AspNetCore.Identity.SignInResult signin = signInManager.PasswordSignInAsync(signinuser.UserName, model.Password, false, false).Result;
-
-
-
-            PublicUserInfo info = new PublicUserInfo
+            if (signInResult.Succeeded)
             {
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtModelConstants.Key));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                UserClearanceNumber = signinuser.ClearanceNumber,
-                role = userManager.GetRolesAsync(signinuser).Result,
-                Username = signinuser.UserName
+                var claims = new[]
+                {
+                    new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, model.Username),
+                    new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName,model.Username)
+                };
+
+                var token = new JwtSecurityToken(
+                    JwtModelConstants.Issuer,
+                    JwtModelConstants.Audience,
+                    claims,
+                    expires: DateTime.UtcNow.AddMinutes(30),
+                    signingCredentials: creds
+                    );
+
+                var result = new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo
+                };
+
+                return Created("", result);
 
 
-            };
+            } else
+            {
+                return BadRequest();
+            }
+            /* // //User user;
+            // //Microsoft.AspNetCore.Identity.SignInResult result;
 
-            return JsonConvert.SerializeObject(info);
+            // User signinuser = await userManager.FindByEmailAsync(model.Username);
+
+            // Microsoft.AspNetCore.Identity.SignInResult signin = signInManager.PasswordSignInAsync(signinuser.UserName, model.Password, false, false).Result;
+
+            // if (signin.Succeeded)
+            // {
+
+            //     PublicUserInfo info = new PublicUserInfo
+            //     {
+
+            //         UserClearanceNumber = signinuser.ClearanceNumber,
+            //         role = userManager.GetRolesAsync(signinuser).Result,
+            //         Username = signinuser.UserName
+
+
+            //     };
+            //     return Ok(JsonConvert.SerializeObject(info));
+            // }
+
+            // return Unauthorized();
 
 
 
@@ -89,15 +134,67 @@ namespace MediControl.Controllers
             //    };
 
             //    return info;
-            //}
+            //} */
 
 
+        }
+
+        [HttpPost("/api/getusers")]
+        public ActionResult getUsers([FromBody]PublicUserInfo info){
+
+
+            
+            var users = userManager.Users.Select(c => c.ClearanceNumber < info.UserClearanceNumber);
+            return Ok(JsonConvert.SerializeObject(users));
         }
 
         public async Task<IActionResult> SignOut()
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Login");
+        }
+
+        [HttpPost("/api/createtoken")]
+        public async Task<IActionResult> CreateToken([FromBody] JwtTokenViewModel model)
+        {
+
+            User user = await userManager.FindByNameAsync(model.Username);
+            var signInResult = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+            if (signInResult.Succeeded)
+            {
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtModelConstants.Key));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var claims = new[]
+                {
+                    new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, model.Username),
+                    new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName,model.Username)
+                };
+
+                var token = new JwtSecurityToken(
+                    JwtModelConstants.Issuer,
+                    JwtModelConstants.Audience,
+                    claims,
+                    expires: DateTime.UtcNow.AddMinutes(30),
+                    signingCredentials: creds
+                    );
+
+                var result = new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    expiration = token.ValidTo
+                };
+
+                return Created("", result);
+
+
+            } else
+            {
+                return BadRequest();
+            }
+            
         }
     }
 }

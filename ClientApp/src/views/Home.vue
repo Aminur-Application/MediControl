@@ -9,6 +9,7 @@
         <v-col>
           <h1 class="headline">Hello, world!</h1>
           <p>Welcome to your new single-page application, built with: </p>
+          <b-button> stuff </b-button>
           <ul>
             <li>
               <a href="https://get.asp.net" target="_blank"> ASP.NET Core</a> and
@@ -62,6 +63,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import 'bootstrap/dist/css/bootstrap.css';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
 
 @Component({
