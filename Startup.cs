@@ -35,8 +35,11 @@ namespace MediControl
             var connectionString = Configuration.GetConnectionString("DataConnection");
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddIdentity<User, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+            services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#$%&'*+-/=?^_`{|}~.\"(),:;<>@[\\]@";
+            })  .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddUserManager<UserManager<User>>()
                 .AddRoleManager<RoleManager<IdentityRole<Guid>>>();
 
@@ -96,6 +99,7 @@ namespace MediControl
             builder
             .AllowAnyOrigin()
             .AllowAnyMethod()
+            .AllowAnyHeader()
             );
 
             

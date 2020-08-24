@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace MediControl.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
     [ApiController]
     public class AccountController : Controller
     {
@@ -148,11 +148,12 @@ namespace MediControl.Controllers
             return Ok(JsonConvert.SerializeObject(users));
         }
 
-        public async Task<IActionResult> SignOut()
-        {
-            await signInManager.SignOutAsync();
-            return RedirectToAction("Login");
-        }
+        // [HttpPost("/api/getusers")]
+        // public async Task<IActionResult> SignOut()
+        // {
+        //     await signInManager.SignOutAsync();
+        //     return RedirectToAction("Login");
+        // }
 
         [HttpPost("/api/createtoken")]
         public async Task<IActionResult> CreateToken([FromBody] JwtTokenViewModel model)
