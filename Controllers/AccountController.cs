@@ -19,7 +19,7 @@ using Newtonsoft.Json;
 namespace MediControl.Controllers
 {
     //[Route("api/[controller]")]
-    [ApiController]
+    //[ApiController]
     public class AccountController : Controller
     {
         private UserManager<User> userManager;
@@ -60,7 +60,7 @@ namespace MediControl.Controllers
         }
 
         [HttpPost("/api/login")]
-        public async Task<IActionResult> Login(UserLogin model)
+        public async Task<IActionResult> Login([FromBody] UserLogin model)
         {
              User user = await userManager.FindByNameAsync(model.Username);
             var signInResult = await signInManager.CheckPasswordSignInAsync(user, model.Password, false);
@@ -91,7 +91,7 @@ namespace MediControl.Controllers
                     expiration = token.ValidTo
                 };
 
-                return Created("", result);
+                return Ok(result);
 
 
             } else

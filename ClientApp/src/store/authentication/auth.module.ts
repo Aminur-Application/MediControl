@@ -16,6 +16,7 @@ export const auth = {
     // tslint:disable-next-line: no-shadowed-variable
     login({ commit }: any, user: { username: any; password: any; }) {
       return authService.login(user).then(
+        
         // tslint:disable-next-line: no-shadowed-variable
         (user) => {
           commit("loginSuccess", user);
@@ -67,7 +68,8 @@ export const auth = {
     }
   },
   getters : {
-    isLoggedIn: (state: { token: any; }) => !!state.token,
+    isLoggedIn: (state: { status: { loggedIn: boolean; }; user: any; }, user: any) => state.status.loggedIn,
+    
     authStatus: (state: { status: any; }) => state.status,
   }
   

@@ -9,15 +9,15 @@
         <v-card-text>
           <v-form>
             <v-text-field
-              label="email"
+              label="username"
               v-validate="'required'"
-              v-model="user.email"
+              v-model="user.username"
               prepend-icon="mdi-account"
               type="text"
-              name="email"
+              name="username"
             ></v-text-field>
             <div
-              v-if="errors.has('email')"
+              v-if="errors.has('username')"
               class="alert alert-danger"
               role="alert"
             >
@@ -45,6 +45,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 <!-- @click.stop="close" -->
+          
           <v-btn color="primary" @click.stop="handleLogin">
             <span
               v-show="loading"
@@ -60,22 +61,34 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { mapGetters,  mapActions} from 'vuex'
 import {User} from '../models/user';
+import vue from "@vue/cli-service"
+import { store } from '../store';
 
 
-@Component
+@Component({
+  computed: {
+    ...mapGetters({
+        isLoggedIn: 'auth/isLoggedIn',
+     })
+  }
+})
 export default class LoginForm extends Vue{
   [x: string]: any;
   @Prop()
-  private value: boolean;
+  private value: boolean = false;
 
   private user: User = {
       username: "",
       password: "",
-      email: "",
   };
 
-  private message: string;
+  public isLoggedIn: boolean; 
+
+  
+
+  private message: string = "";
 
   private loading: boolean = false;
 
@@ -98,20 +111,27 @@ export default class LoginForm extends Vue{
           this.loading = false;
           return;
         }
-        if (this.user.email && this.user.password) {
+        if (this.user.username && this.user.password) {
             console.log("valid email & password")
+            console.log(this.user)
           this.$store.dispatch('auth/login', this.user).then(
             () => {
+              
+              this.loading = false;
+              console.log(this.isLoggedIn)
+
               // this.$router.push('/home');
-              this.$emit('close');
+              
             },
             error => {
                 console.log(" not valid email & password")
               this.loading = false;
+              console.log(this.isLoggedIn)
               this.message =
                 (error.response && error.response.data) ||
                 error.message ||
                 error.toString();
+                this.$emit('close');
             }
           );
         }
