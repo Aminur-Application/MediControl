@@ -26,10 +26,8 @@
                      @click.stop="showLoginForm=true">
                   Login
               </v-btn>
-
-              <loginForm v-model="showLoginForm" @close="showLoginForm = false" />
           </v-list-item>
-
+          <loginForm v-model="showLoginForm" @close="showLoginForm = false" />
           <v-list-item two-line :class="miniVariant && 'px-0'" v-if="!login">
               <v-btn block
                      color="primary"
@@ -39,7 +37,7 @@
                     Registration
               </v-btn>
 
-              <loginForm v-model="showLoginForm" @close="showLoginForm = false" />
+             
           </v-list-item>
 
 

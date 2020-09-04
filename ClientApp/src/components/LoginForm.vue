@@ -119,6 +119,7 @@ export default class LoginForm extends Vue{
               
               this.loading = false;
               console.log(this.isLoggedIn)
+              this.$emit('close');
 
               // this.$router.push('/home');
               
@@ -127,6 +128,7 @@ export default class LoginForm extends Vue{
                 console.log(" not valid email & password")
               this.loading = false;
               console.log(this.isLoggedIn)
+              
               this.message =
                 (error.response && error.response.data) ||
                 error.message ||

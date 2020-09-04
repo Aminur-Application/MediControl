@@ -1,10 +1,11 @@
 import { getters } from './../counter/getters';
 import { AuthService } from "./../../services/auth.service";
+import jwt_decode from "jwt-decode"
 //https://github.com/bezkoder/vue-vuex-jwt-auth
 
 const authService = new AuthService();
 
-const user = JSON.parse(localStorage.getItem("user") || "{}");
+const user = JSON.parse(localStorage.getItem("user"));
 const initialState = user
   ? { status: { loggedIn: true }, user }
   : { status: { loggedIn: false }, user: null };
@@ -44,6 +45,21 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    inspectToken(){
+      // const token = user;
+      // if(token){
+      //   const decoded: any = jwt_decode(token);
+      //   const exp = decoded.exp;
+      //   const orig_iat = decoded.orig_iat;
+      //   if(token.expiration - (Date.now()/1000) < 1800 && (Date.now()/1000) - orig_iat < 628200){
+      //     this.dispatch('refreshToken')
+      //   } else if (exp -(Date.now()/1000) < 1800){
+      //     // DO NOTHING, DO NOT REFRESH          
+      //   } else {
+      //     // PROMPT USER TO RE-LOGIN, THIS ELSE CLAUSE COVERS THE CONDITION WHERE A TOKEN IS EXPIRED AS WELL
+      //   }
+      // }
     }
   },
   mutations: {
@@ -68,7 +84,7 @@ export const auth = {
     }
   },
   getters : {
-    isLoggedIn: (state: { status: { loggedIn: boolean; }; user: any; }, user: any) => state.status.loggedIn,
+    isLoggedIn: (state: { status: { loggedIn: boolean ; }; user: any; }, user: any) => state.status.loggedIn,
     
     authStatus: (state: { status: any; }) => state.status,
   }
