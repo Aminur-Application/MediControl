@@ -94,7 +94,7 @@ export default class App extends Vue {
   private login: boolean = false;
   private title: string = 'MediControl';
   private items = [
-    { title: 'Home', icon: 'home', link: '/home' },
+    { title: 'Home', icon: 'home', link: '/' },
     { title: 'Counter', icon: 'touch_app', link: '/counter' },
     { title: 'Fetch data', icon: 'get_app', link: '/fetch-data' },
     ];

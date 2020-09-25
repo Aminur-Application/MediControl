@@ -7,9 +7,9 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
-    <Authors>Software Ateliers</Authors>
-    <Company>Software Ateliers</Company>
-    <Description>ASP.NET Core + Vue.js starter project</Description>
+    <Authors>Aminur Rahman</Authors>
+    <Company>Aminur Rahman and Friends</Company>
+    <Description>ASP.NET Core + Vue.js MediControl Application</Description>
     <Copyright>MIT 2020 Software Ateliers</Copyright>
     <AssemblyName>MediControl</AssemblyName>
     <RootNamespace>MediControl</RootNamespace>

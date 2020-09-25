@@ -46,23 +46,24 @@ export const auth = {
         }
       );
     },
-    inspectToken(){
-      // const token = user;
-      // if(token){
-      //   const decoded: any = jwt_decode(token);
-      //   const exp = decoded.exp;
-      //   const orig_iat = decoded.orig_iat;
-      //   if(token.expiration - (Date.now()/1000) < 1800 && (Date.now()/1000) - orig_iat < 628200){
-      //     this.dispatch('refreshToken')
-      //   } else if (exp -(Date.now()/1000) < 1800){
-      //     // DO NOTHING, DO NOT REFRESH          
-      //   } else {
-      //     // PROMPT USER TO RE-LOGIN, THIS ELSE CLAUSE COVERS THE CONDITION WHERE A TOKEN IS EXPIRED AS WELL
-      //   }
-      // }
+    inspectToken({ commit }: any){
+      const token = user.token;
+      if(token){
+        const decoded: any = jwt_decode(token);
+        const exp = decoded.exp;
+        const orig_iat = decoded.orig_iat;
+        if(token.expiration - (Date.now()/1000) < 1800 && (Date.now()/1000) - orig_iat < 628200){
+          commit("loginSuccess", user);
+        } else if (exp -(Date.now()/1000) < 1800){
+          // DO NOTHING, DO NOT REFRESH          
+        } else {
+          // PROMPT USER TO RE-LOGIN, THIS ELSE CLAUSE COVERS THE CONDITION WHERE A TOKEN IS EXPIRED AS WELL
+        }
+      }
     }
   },
   mutations: {
+    
     // tslint:disable-next-line: no-shadowed-variable
     loginSuccess(state: { status: { loggedIn: boolean; }; user: any; }, user: any) {
       state.status.loggedIn = true;
