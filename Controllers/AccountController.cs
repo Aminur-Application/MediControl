@@ -75,14 +75,16 @@ namespace MediControl.Controllers
                     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, model.Username),
                     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName,model.Username)
+
                 };
 
                 var token = new JwtSecurityToken(
                     JwtModelConstants.Issuer,
                     JwtModelConstants.Audience,
                     claims,
-                    expires: DateTime.UtcNow.AddMinutes(30),
+                    expires: DateTime.UtcNow.AddMinutes(5),
                     signingCredentials: creds
+                    
                     );
 
                 var result = new
@@ -178,7 +180,7 @@ namespace MediControl.Controllers
                     JwtModelConstants.Issuer,
                     JwtModelConstants.Audience,
                     claims,
-                    expires: DateTime.UtcNow.AddMinutes(30),
+                    expires: DateTime.UtcNow.AddMinutes(5),
                     signingCredentials: creds
                     );
 

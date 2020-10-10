@@ -45,6 +45,10 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 <!-- @click.stop="close" -->
+          <v-btn color="primary" @click.stop="close">
+            close
+              </v-btn
+          >
           
           <v-btn color="primary" @click.stop="handleLogin">
             <span

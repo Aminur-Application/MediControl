@@ -1,58 +1,72 @@
 <template>
   <v-app>
-    
+    <v-navigation-drawer
+      persistent
+      :mini-variant="miniVariant"
+      :clipped="clipped"
+      v-model="drawer"
+      disable-resize-watcher
+      fixed
+      app
+    >
+      <v-list-item two-line :class="miniVariant && 'px-0'" v-if="loggedIn">
+        <template>
+          <v-list-item-avatar>
+            <img src="https://randomuser.me/api/portraits/men/81.jpg" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title>Application</v-list-item-title>
+            <v-list-item-subtitle>Subtext</v-list-item-subtitle>
+          </v-list-item-content>
+        </template>
+      </v-list-item>
+      <v-list-item two-line :class="miniVariant && 'px-0'" v-if="loggedIn">
+        <v-btn block color="primary" dark large @click.stop="handleLogout">
+          Logout</v-btn
+        >
+      </v-list-item>
 
-      <v-navigation-drawer persistent :mini-variant="miniVariant" :clipped="clipped" v-model="drawer" disable-resize-watcher fixed app>
-          <v-list-item two-line :class="miniVariant && 'px-0'" v-if="login">
-              <template>
+      <v-list-item two-line :class="miniVariant && 'px-0'" v-if="!loggedIn">
+        <v-btn
+          block
+          color="primary"
+          dark
+          large
+          @click.stop="showLoginForm = true"
+        >
+          Login
+        </v-btn>
+      </v-list-item>
+      <loginForm v-model="showLoginForm" @close="showLoginForm = false" />
+      <v-list-item two-line :class="miniVariant && 'px-0'" v-if="!loggedIn">
+        <v-btn
+          block
+          color="primary"
+          dark
+          large
+          @click.stop="showLoginForm = true"
+        >
+          Registration
+        </v-btn>
+      </v-list-item>
 
-
-                  <v-list-item-avatar>
-                      <img src="https://randomuser.me/api/portraits/men/81.jpg" />
-                  </v-list-item-avatar>
-                  <v-list-item-content>
-                      <v-list-item-title>Application</v-list-item-title>
-                      <v-list-item-subtitle>Subtext</v-list-item-subtitle>
-                  </v-list-item-content>
-              </template>
-          </v-list-item>
-
-
-          <v-list-item two-line :class="miniVariant && 'px-0'" v-if="!login">
-              <v-btn block
-                     color="primary"
-                     dark
-                     large
-                     @click.stop="showLoginForm=true">
-                  Login
-              </v-btn>
-          </v-list-item>
-          <loginForm v-model="showLoginForm" @close="showLoginForm = false" />
-          <v-list-item two-line :class="miniVariant && 'px-0'" v-if="!login">
-              <v-btn block
-                     color="primary"
-                     dark
-                     large
-                     @click.stop="showLoginForm=true">
-                    Registration
-              </v-btn>
-
-             
-          </v-list-item>
-
-
-          <v-divider></v-divider>
-          <v-list v-if="!login">
-              <v-list-item value="true" v-for="(item, i) in items" :key="i" :to="item.link">
-                  <v-list-item-action>
-                      <v-icon v-html="item.icon"></v-icon>
-                  </v-list-item-action>
-                  <v-list-item-content>
-                      <v-list-item-title v-text="item.title"></v-list-item-title>
-                  </v-list-item-content>
-              </v-list-item>
-          </v-list>
-      </v-navigation-drawer>
+      <v-divider></v-divider>
+      <v-list v-if="loggedIn">
+        <v-list-item
+          value="true"
+          v-for="(item, i) in items"
+          :key="i"
+          :to="item.link"
+        >
+          <v-list-item-action>
+            <v-icon v-html="item.icon"></v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
 
     <v-app-bar app :clipped-left="clipped" color="info" dark>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
@@ -67,23 +81,24 @@
     </v-app-bar>
 
     <v-content>
-      <router-view/>
+      <router-view />
     </v-content>
 
     <v-footer app>
       <span>&nbsp;Software Ateliers&nbsp;&copy;&nbsp;2020</span>
     </v-footer>
-
   </v-app>
 </template>
 
 <script lang="ts">
-import HelloWorld from '@/components/HelloWorld.vue';
-import { Component, Vue } from 'vue-property-decorator';
-import LoginForm from '@/components/LoginForm.vue';
+import HelloWorld from "@/components/HelloWorld.vue";
+import { Component, Vue } from "vue-property-decorator";
+import LoginForm from "@/components/LoginForm.vue";
+import { store } from "./store";
 
 @Component({
-  components: { HelloWorld, LoginForm},
+  components: { HelloWorld, LoginForm },
+  
 })
 export default class App extends Vue {
   private clipped: boolean = false;
@@ -91,25 +106,49 @@ export default class App extends Vue {
   private miniVariant: boolean = false;
   private right: boolean = true;
   private showLoginForm: boolean = false;
-  private login: boolean = false;
-  private title: string = 'MediControl';
+  private loadingLogout: boolean = false;
+  //private login: boolean = false;
+  private title: string = "MediControl";
   private items = [
-    { title: 'Home', icon: 'home', link: '/' },
-    { title: 'Counter', icon: 'touch_app', link: '/counter' },
-    { title: 'Fetch data', icon: 'get_app', link: '/fetch-data' },
-    ];
+    { title: "Home", icon: "home", link: "/" },
+    { title: "Counter", icon: "touch_app", link: "/counter" },
+    { title: "Fetch data", icon: "get_app", link: "/fetch-data" },
+  ];
 
-  //private onResize(event: any) {
-  //    //console.log('window has been resized', event)
-  //    //this.showLoginForm = false;
-  //    //if (window.outerWidth < 1000 && this.showLoginForm == true) {
-  //    //    console.log("reset")
-  //    //    this.showLoginForm = false
-  //    //}
-  //}
+  private get loggedIn() {
+    if (store.getters["auth/isLoggedIn"]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-  //  private mounted() {
-  //      window.addEventListener('resize', this.onResize)
-  //  }
+  private handleLogout() {
+    console.log("handleLogout")
+    this.loadingLogout = true;
+    this.$store.dispatch("auth/logout").then(() => {
+      this.loadingLogout = false;
+      console.log("LoggedOut");
+    });
+  }
+
+
+  
+
+
+
+
 }
+//private onResize(event: any) {
+//    //console.log('window has been resized', event)
+//    //this.showLoginForm = false;
+//    //if (window.outerWidth < 1000 && this.showLoginForm == true) {
+//    //    console.log("reset")
+//    //    this.showLoginForm = false
+//    //}
+//}
+
+//  private mounted() {
+//      window.addEventListener('resize', this.onResize)
+//  }
 </script>
