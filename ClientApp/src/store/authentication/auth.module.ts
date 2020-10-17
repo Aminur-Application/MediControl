@@ -7,8 +7,8 @@ const authService = new AuthService();
 
 let user = JSON.parse(localStorage.getItem("user"));
 let initialState = user
-  ? { status: { loggedIn: true, expired: false }, user }
-  : { status: { loggedIn: false, expired: false }, user: null };
+  ? { status: { loggedIn: true, expired: false }, user, showModal:false }
+  : { status: { loggedIn: false, expired: false }, user: null, showModal:true };
 
 export let auth = {
   namespaced: true,
@@ -114,6 +114,9 @@ export let auth = {
       state.status.expired = false;
       //state.user = user;
     },
+    toggleModal(state:{ status : {showModal:boolean}}){
+      state.status.showModal = !state.status.showModal;
+    }
   },
   getters: {
     isLoggedIn: (
@@ -128,5 +131,7 @@ export let auth = {
 
     tokenStatus: (state: { status: { expired: boolean } }) =>
       state.status.expired,
+
+    showModal: (state: {status: {showModal: boolean}})=> state.status.showModal
   },
 };

@@ -65,7 +65,8 @@ router.beforeEach((to, from, next) => {
     }
   }
   else{
-    //console.log(store.getters["auth/inspectToken"])
+    //console.log
+    (store.getters["auth/inspectToken"])
     store.dispatch("auth/logout");
   }
 
