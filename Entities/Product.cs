@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MediControl.Models
+namespace MediControl.Entities
 {
     public class Product
     {

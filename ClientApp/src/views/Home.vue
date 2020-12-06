@@ -1,5 +1,6 @@
 <template>
   <v-container fluid>
+     <!-- <autoLogout v-if="loggedIn"> </autoLogout> -->
     <v-layout column align-center>
       <img src="@/assets/logo.png" alt="Vuetify.js" class="mb-5">
       <HelloWorld quote="Welcome to Your ASP.NET Core + Vue.js + TypeScript App" author="brought to you by Software Ateliers" />
@@ -65,11 +66,24 @@
 import { Component, Vue } from 'vue-property-decorator';
 import 'bootstrap/dist/css/bootstrap.css';
 import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import AutoLogout from '@/components/AutoLogout.vue';
+import { store } from "../store";
 
 @Component({
   components: {
-    HelloWorld,
+    HelloWorld, AutoLogout
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+
+
+
+  private get loggedIn() {
+    if (store.getters["auth/isLoggedIn"]) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
 </script>

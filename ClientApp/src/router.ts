@@ -66,8 +66,13 @@ router.beforeEach((to, from, next) => {
   }
   else{
     //console.log
-    (store.getters["auth/inspectToken"])
+    // next("/");
+    // (store.getters["auth/inspectToken"])
     store.dispatch("auth/logout");
+    if(to.path !== '/'){
+    console.log("not in login")
+    next("/");
+    }
   }
 
   // if(to.path !== '/'){

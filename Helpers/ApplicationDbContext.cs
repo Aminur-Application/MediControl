@@ -5,8 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediControl.Entities;
 
-namespace MediControl.Models
+namespace MediControl.Helpers
 {
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
@@ -21,7 +22,7 @@ namespace MediControl.Models
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (options == null)
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=MediControl;Trusted_Connection=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer("Server=(localdb)\\AminurLocalDb;Database=MediControlDat;Trusted_Connection=True;MultipleActiveResultSets=true");
         }
     }
 }

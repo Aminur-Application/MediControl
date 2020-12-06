@@ -1,4 +1,6 @@
 using MediControl.Controllers;
+using MediControl.Helpers;
+using MediControl.Entities;
 using MediControl.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,12 +11,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using VueCliMiddleware;
+using MediControl.Services;
 
 namespace MediControl
 {
@@ -43,13 +47,20 @@ namespace MediControl
                 .AddUserManager<UserManager<User>>()
                 .AddRoleManager<RoleManager<IdentityRole<Guid>>>();
 
-            services.AddAuthentication()
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddCookie(cfg => cfg.SlidingExpiration = true)
                 .AddJwtBearer(cfg => {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
                     cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
                     {
                         ValidIssuer = JwtModelConstants.Issuer,
                         ValidAudience = JwtModelConstants.Audience,
+                        ClockSkew = TimeSpan.Zero,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtModelConstants.Key))
                     };
                 });
@@ -69,6 +80,8 @@ namespace MediControl
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

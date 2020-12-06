@@ -9,7 +9,9 @@ export class AuthService {
                username: user.username,
                password: user.password
            });
-    if (response.data.token) {
+           
+    if (response.data) {
+      //console.log("stuff" , response.data)
            localStorage.setItem("user", JSON.stringify(response.data));
        }
     return response.data;

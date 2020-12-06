@@ -52,22 +52,50 @@ export let auth = {
         }
       );
     },
+    // refreshToken(){
+    //   const payload = {
+    //     token: this.state.jwt
+    //   }
+    //   axios.post(this.state.endpoints.refreshJWT, payload)
+    //     .then((response)=>{
+    //         this.commit('updateToken', response.data.token)
+    //       })
+    //     .catch((error)=>{
+    //         console.log(error)
+    //       })
+    // },
+
     inspectToken({ commit }: any) {
       //console.log("valid User :", user )
       if(user){
-      const token = user.token;
+      const token = user.jwtToken;
       //console.log("valid token :", user.expiration)
 
       
       if (token) {
+        //console.log("token",token)
         const decoded: any = jwt_decode(token);
         const exp = decoded.exp;
         const orig_iat = decoded.orig_iat;
-        // if (
-        //   token.expiration - Date.now() / 1000 < 1800 &&
-        //   Date.now() / 1000 - orig_iat < 628200
-        // ) 
-        //console.log("inspect token :", user.token)
+        
+        // if(exp - (Date.now()/1000) < 1800 && (Date.now()/1000) - orig_iat < 628200){
+        //   console.log("Valid Token Refreshing")
+        //   commit("validToken");
+        //   //this.dispatch('refreshToken')
+        // } else if (exp -(Date.now()/1000) < 1800){
+        //   // DO NOTHING, DO NOT REFRESH          
+        //   console.log("Valid Token Not Refreshing")
+        //   commit("validToken");
+        // } else if (decoded.exp < Date.now()/1000) 
+        // {
+        //   console.log("invalid Token")
+        //   commit("invalidToken");  
+        // } else {
+        //   // PROMPT USER TO RE-LOGIN, THIS ELSE CLAUSE COVERS THE CONDITION WHERE A TOKEN IS EXPIRED AS WELL
+        //   console.log("invalid Token")
+        //   commit("invalidToken");
+        // }
+
         if (decoded.exp < Date.now()/1000) 
         {
           console.log("invalid Token")

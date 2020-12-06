@@ -1,5 +1,9 @@
-<template>
+<template> 
   <v-app>
+  
+        <!-- <autoLogout v-if="loggedIn"> </autoLogout> -->
+    
+    
     <v-navigation-drawer
       persistent
       :mini-variant="miniVariant"
@@ -94,10 +98,11 @@
 import HelloWorld from "@/components/HelloWorld.vue";
 import { Component, Vue } from "vue-property-decorator";
 import LoginForm from "@/components/LoginForm.vue";
+import AutoLogout from "@/components/AutoLogout.vue";
 import { store } from "./store";
 
 @Component({
-  components: { HelloWorld, LoginForm },
+  components: { HelloWorld, LoginForm, AutoLogout },
   
 })
 export default class App extends Vue {
@@ -128,7 +133,9 @@ export default class App extends Vue {
     this.loadingLogout = true;
     this.$store.dispatch("auth/logout").then(() => {
       this.loadingLogout = false;
+      this.$router.push("/");
       console.log("LoggedOut");
+
     });
   }
 
