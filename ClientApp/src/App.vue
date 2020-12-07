@@ -129,7 +129,7 @@ export default class App extends Vue {
   }
 
   private handleLogout() {
-    console.log("handleLogout")
+    //console.log("handleLogout")
     this.loadingLogout = true;
     this.$store.dispatch("auth/logout").then(() => {
       this.loadingLogout = false;
@@ -138,6 +138,19 @@ export default class App extends Vue {
 
     });
   }
+
+  private login(){
+
+  }
+
+  private logout(){
+
+  }
+
+  private refreshToken(){
+    
+  }
+
 
 
   

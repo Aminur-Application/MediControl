@@ -148,7 +148,7 @@ namespace MediControl.Services
                     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.UniqueName, user.UserName)
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -1,4 +1,4 @@
-namespace WebApi.Models
+namespace MediControl.Models
 {
     public class RevokeTokenRequest
     {

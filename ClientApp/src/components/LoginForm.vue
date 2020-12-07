@@ -99,7 +99,6 @@ export default class LoginForm extends Vue{
 
 
     private get show(){
-        console.log(this.value)
         return this.value;
     }
 
@@ -108,7 +107,7 @@ export default class LoginForm extends Vue{
     }
     private handleLogin() {
       this.loading = true;
-      console.log("testing")
+      
       this.$validator.validateAll().then(isValid => {
         if (!isValid) {
             console.log("not valid")
@@ -116,23 +115,21 @@ export default class LoginForm extends Vue{
           return;
         }
         if (this.user.username && this.user.password) {
-            console.log("valid email & password")
-            console.log(this.user)
+          
           this.$store.dispatch('auth/login', this.user).then(
             () => {
-              
+              console.log("valid email & password")
               this.loading = false;
-              console.log(this.isLoggedIn)
+             
               this.$emit('close');
 
               // this.$router.push('/home');
               
             },
             error => {
-                console.log(" not valid email & password")
+              console.log(" not valid email & password")
               this.loading = false;
-              console.log(this.isLoggedIn)
-              
+           
               this.message =
                 (error.response && error.response.data) ||
                 error.message ||

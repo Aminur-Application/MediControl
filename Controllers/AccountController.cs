@@ -114,7 +114,7 @@ namespace MediControl.Controllers
 
         }
 
-        [HttpPost("refresh-token")]
+        [HttpPost("/api/refresh-token")]
         public IActionResult RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
@@ -126,6 +126,23 @@ namespace MediControl.Controllers
             setTokenCookie(response.RefreshToken);
 
             return Ok(response);
+        }
+
+        [HttpPost("/api/revoke-token")]
+        public IActionResult RevokeToken([FromBody] RevokeTokenRequest model)
+        {
+            // accept token from request body or cookie
+            var token = model.Token ?? Request.Cookies["refreshToken"];
+
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
+
+            var response = _userService.RevokeToken(token, ipAddress());
+
+            if (!response)
+                return NotFound(new { message = "Token not found" });
+
+            return Ok(new { message = "Token revoked" });
         }
 
 

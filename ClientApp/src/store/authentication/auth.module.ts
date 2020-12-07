@@ -16,7 +16,7 @@ export let auth = {
   actions: {
     // tslint:disable-next-line: no-shadowed-variable
     login({ commit }: any, user: { username: any; password: any }) {
-      console.log("user : ",user)
+      //console.log("user : ",user)
       return authService.login(user).then(
         // tslint:disable-next-line: no-shadowed-variable
         (user) => {
@@ -34,7 +34,7 @@ export let auth = {
     logout({ commit }: any) {
       authService.logout();
       commit("logout");
-      console.log(user)
+      //console.log(user)
     },
     // tslint:disable-next-line: no-shadowed-variable
     register(
